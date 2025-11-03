@@ -14,4 +14,13 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Intervention\" />
+      <Folder Include="Payments\" />
+      <Folder Include="ProfessionalConnection\" />
+      <Folder Include="Stress\" />
+      <Folder Include="Subscription\" />
+      <Folder Include="UserManagement\" />
+    </ItemGroup>
+
 </Project>
