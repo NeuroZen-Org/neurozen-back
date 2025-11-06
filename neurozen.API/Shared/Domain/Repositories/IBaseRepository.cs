@@ -1,4 +1,4 @@
-namespace neurozen-back.neurozen.API.Shared.Domain.Repositories;
+namespace neurozen.API.Shared.Domain.Repositories;
 
 /// <summary>
 ///     Base repository interface for all repositories

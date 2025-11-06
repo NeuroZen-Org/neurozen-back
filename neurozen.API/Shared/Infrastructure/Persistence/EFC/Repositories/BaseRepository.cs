@@ -1,8 +1,8 @@
-using CatchUpPlatform.API.Shared.Domain.Repositories;
-using CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
+using neurozen.API.Shared.Domain.Repositories;
+using neurozen.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+namespace neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 /// <summary>
 ///     Base repository for all repositories

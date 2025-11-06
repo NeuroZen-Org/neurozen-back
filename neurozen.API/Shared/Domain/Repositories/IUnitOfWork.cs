@@ -1,4 +1,4 @@
-namespace CatchUpPlatform.API.Shared.Domain.Repositories;
+namespace neurozen.API.Shared.Domain.Repositories;
 
 /// <summary>
 ///     Unit of work interface

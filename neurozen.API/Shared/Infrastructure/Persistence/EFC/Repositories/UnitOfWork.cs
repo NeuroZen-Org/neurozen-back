@@ -1,7 +1,7 @@
-using CatchUpPlatform.API.Shared.Domain.Repositories;
-using CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
+using neurozen.API.Shared.Domain.Repositories;
+using neurozen.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
-namespace CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+namespace neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 /// <summary>
 ///     Unit of work implementation

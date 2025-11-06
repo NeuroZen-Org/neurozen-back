@@ -1,9 +1,9 @@
-using CatchUpPlatform.API.News.Domain.Model.Aggregates;
-using CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using neurozen.API.News.Domain.Model.Aggregates;
+using neurozen.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
+namespace neurozen.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 /// <summary>
 ///     Application database context

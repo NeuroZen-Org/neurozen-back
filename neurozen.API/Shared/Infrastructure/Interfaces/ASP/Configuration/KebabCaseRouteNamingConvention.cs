@@ -1,7 +1,7 @@
-using CatchUpPlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+using neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-namespace CatchUpPlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
+namespace neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 
 public class KebabCaseRouteNamingConvention : IControllerModelConvention
 {
