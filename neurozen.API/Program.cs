@@ -22,7 +22,7 @@ if (builder.Environment.IsDevelopment())
             if (connectionString is null)
                 // Stop the application if the connection string is not set.
                 throw new Exception("Database connection string is not set.");
-            options.UseMySQL(connectionString)
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
