@@ -1,5 +1,13 @@
 using neurozen.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Microsoft.EntityFrameworkCore;
+using neurozen.API.Appointments.Application.Internal.CommandServices;
+using neurozen.API.Appointments.Application.Internal.QueryServices;
+using neurozen.API.Appointments.Domain.Repositories;
+using neurozen.API.Appointments.Domain.Services;
+using neurozen.API.Appointments.Infrastructure.Repositories;
+using neurozen.API.Shared.Domain.Repositories;
+using neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
+using neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +17,11 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true );
 
+builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
+
 builder.Services.AddEndpointsApiExplorer();
 // Enable Swashbuckle Annotations so [SwaggerOperation]/[SwaggerResponse] attributes are recognized
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => options.EnableAnnotations());
 
 
 if (builder.Environment.IsDevelopment())
@@ -28,6 +38,11 @@ if (builder.Environment.IsDevelopment())
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         });
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IAppointmentCommandService, AppointmentCommandService>();
+builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
 
 var app = builder.Build();
 
@@ -37,20 +52,10 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
-
-    /*
-    var blog1 = new Blog()
-    {
-        BlogId = 1,
-        Title = "Hello",
-        Url = "1231231"
-    };
-    context.Blogs.Add(blog1);  
-    context.SaveChanges();
-    */
 }
 app.UseHttpsRedirection();
-
+app.UseAuthorization();
+app.MapControllers();
 
 app.UseSwagger();
 app.UseSwaggerUI();
