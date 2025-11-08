@@ -10,6 +10,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddRouting(options => options.LowercaseUrls = true );
 
 builder.Services.AddEndpointsApiExplorer();
+// Enable Swashbuckle Annotations so [SwaggerOperation]/[SwaggerResponse] attributes are recognized
 builder.Services.AddSwaggerGen();
 
 
@@ -56,4 +57,3 @@ app.UseSwaggerUI();
 
 
 app.Run();
-

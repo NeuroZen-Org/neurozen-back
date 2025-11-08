@@ -2,7 +2,7 @@
 
 public interface IEntityWithCreatedUpdatedDated
 {
-    DateTime CreatedAt { get; set; }
-    DateTime? UpdatedAt { get; set; }
+    DateTimeOffset CreatedDate { get; set; }
+    DateTimeOffset UpdatedDate { get; set; }
 }
 
