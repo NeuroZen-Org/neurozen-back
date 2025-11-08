@@ -1,6 +1,10 @@
-﻿namespace neurozen.API.Appointments.Domain.Services;
+﻿using neurozen.API.Appointments.Domain.Model.Aggregates;
+using neurozen.API.Appointments.Domain.Model.Queries;
 
-public class IAppointmentQueryService
+namespace neurozen.API.Appointments.Domain.Services;
+
+public interface IAppointmentQueryService
 {
     
+    Task<IEnumerable<Appointment>> Handle(GetAllAppointmentsQueryByPatientId query);
 }
