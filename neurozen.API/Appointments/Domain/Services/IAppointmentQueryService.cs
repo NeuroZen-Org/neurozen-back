@@ -7,4 +7,6 @@ public interface IAppointmentQueryService
 {
     
     Task<IEnumerable<Appointment>> Handle(GetAllAppointmentsQueryByPatientId query);
+    
+    Task<Appointment?> Handle(GetAppointmentByIdQuery query);
 }
