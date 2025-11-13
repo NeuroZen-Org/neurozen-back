@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using neurozen.API.Appointments.Domain.Model.Aggregates;
 
@@ -30,6 +30,17 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .HasColumnName("appointment_date_time")
             .IsRequired();
 
+        // Enum almacenado como int en la BD
+        builder.Property(a => a.AppointmentType)
+            .HasColumnName("appointment_type")
+            .HasConversion<int>()
+            .IsRequired();
+
+        builder.Property(a => a.Notas_Adicionales)
+            .HasColumnName("notas_adicionales")
+            .HasMaxLength(2000)
+            .IsRequired(false);
+
         // Indexes for better query performance
         builder.HasIndex(a => a.PatientId)
             .HasDatabaseName("idx_appointments_patient_id");
@@ -39,5 +50,8 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
 
         builder.HasIndex(a => a.AppointmentDateTime)
             .HasDatabaseName("idx_appointments_date_time");
+
+        builder.HasIndex(a => a.AppointmentType)
+            .HasDatabaseName("idx_appointments_type");
     }
 }
