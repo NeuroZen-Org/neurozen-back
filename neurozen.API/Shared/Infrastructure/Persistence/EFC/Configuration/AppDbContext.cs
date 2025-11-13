@@ -45,5 +45,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         
         builder.ApplyConfiguration(
             new Triggers.Infraestructure.Persistence.EFC.Configuration.TriggerConfiguration());
-    }
+
+        builder.ApplyConfiguration(
+            new ResourcesLibrary.Infrastructure.Persistence.EFC.Configuration.ResourceLibraryConfiguration());
+ 		
+  }
 }
