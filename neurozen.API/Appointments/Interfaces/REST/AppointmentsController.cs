@@ -6,6 +6,7 @@ using neurozen.API.Appointments.Domain.Model.Queries;
 using neurozen.API.Appointments.Domain.Services;
 using neurozen.API.Appointments.Interfaces.REST.Resources;
 using neurozen.API.Appointments.Interfaces.REST.Transform;
+using neurozen.API.Appointments.Domain.Model.ValueObjects;
 
 namespace neurozen.API.Appointments.Interfaces.REST;
 
@@ -60,5 +61,24 @@ public class AppointmentsController(
         var result = await appointmentQueryService.Handle(getAppointmentByIdQuery);
         if (result is null) return NotFound();
         return Ok(AppointmentResourceFromEntityAssembler.ToResourceFromEntity(result));
+    }
+    
+    [HttpGet("types")]
+    [SwaggerOperation(
+        Summary = "Get all appointment types",
+        Description = "Retrieves all available appointment types with their details (name, description, estimated duration).")]
+    [SwaggerResponse(200, "Appointment types retrieved successfully")]
+    public ActionResult GetAppointmentTypes()
+    {
+        var types = AppointmentType.GetAll()
+            .Select(t => new {
+                value = (int)t.Type,
+                name = t.Type.ToString(),
+                displayName = t.DisplayName,
+                description = t.Description,
+                estimatedDurationMinutes = t.EstimatedDurationMinutes
+            });
+        
+        return Ok(types);
     }
 }
