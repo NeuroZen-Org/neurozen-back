@@ -1,3 +1,10 @@
-﻿namespace neurozen.API.Appointments.Domain.Model.Commands;
+﻿using neurozen.API.Appointments.Domain.Model.ValueObjects;
 
-public record CreateAppointmentCommand(int PatientId, int ProfessionalId, DateTime AppointmentDate);
+namespace neurozen.API.Appointments.Domain.Model.Commands;
+
+public record CreateAppointmentCommand(
+    int PatientId, 
+    int ProfessionalId, 
+    DateTime AppointmentDate,
+    EAppointmentType AppointmentType,
+    string? NotasAdicionales = null);
