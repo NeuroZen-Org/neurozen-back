@@ -31,9 +31,6 @@ public class AppointmentsController(
     [SwaggerResponse(400, "Appointment creation failed")]
     public async Task<ActionResult> CreateAppointment([FromBody] CreateAppointmentResource resource)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
         String msg = _localizer.GetString("CreateAppointmentError");
         var createAppointmentCommand = CreateAppointmentCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result =  await appointmentCommandService.Handle(createAppointmentCommand);
@@ -53,7 +50,7 @@ public class AppointmentsController(
         String msg = _localizer.GetString("GetAppointmentsbyPatientIdError");
         var getAllAppointmentsByPatientIdQuery = new GetAllAppointmentsQueryByPatientId(patientId);
         var result = await appointmentQueryService.Handle(getAllAppointmentsByPatientIdQuery);
-        if (result == null || !result.Any()) return BadRequest(new { message = msg });
+        if (result == null || !result.Any()) return NotFound(new { message = msg });
         var appointments = result.Select(AppointmentResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(appointments);
     }
@@ -66,9 +63,10 @@ public class AppointmentsController(
     [SwaggerResponse(404, "Appointment not found")]
     public async Task<ActionResult> GetAppointmentById(int id)
     {
+        String msg = _localizer.GetString("GetAppointmentByIdError");
         var getAppointmentByIdQuery = new GetAppointmentByIdQuery(id);
         var result = await appointmentQueryService.Handle(getAppointmentByIdQuery);
-        if (result is null) return NotFound();
+        if (result is null) return NotFound(new { message = msg });
         return Ok(AppointmentResourceFromEntityAssembler.ToResourceFromEntity(result));
     }
     
