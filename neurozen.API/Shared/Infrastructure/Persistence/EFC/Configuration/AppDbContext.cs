@@ -50,6 +50,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
         builder.ApplyConfiguration(
             new ResourcesLibrary.Infrastructure.Persistence.EFC.Configuration.ResourceLibraryConfiguration());
+        
+        builder.ApplyConfiguration(
+            new Subscriptions.Infraestructure.Persistence.EFC.Configuration.SubscriptionConfiguration());
  		
   }
 }
