@@ -6,4 +6,6 @@ namespace neurozen.API.Professionals.Domain.Services;
 public interface IProfessionalQueryService
 {
     Task<IEnumerable<Professional>> Handle(GetAllProfessionalsQuery query);
+
+    Task<Professional?> Handle(GetProfessionalByIdQuery query);
 }
