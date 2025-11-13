@@ -24,6 +24,8 @@
       <Folder Include="Triggers\Domain\Model\Queries\" />
       <Folder Include="Professionals\Interfaces\REST\Resources\" />
       <Folder Include="Professionals\Interfaces\REST\Transform\" />
+      <Folder Include="Professionals\Interfaces\REST\Resources\" />
+      <Folder Include="Professionals\Interfaces\REST\Transform\" />
       <Folder Include="UserManagement\" />
     </ItemGroup>
 
