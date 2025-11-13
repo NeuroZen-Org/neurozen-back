@@ -5,6 +5,7 @@ using neurozen.API.Appointments.Application.Internal.QueryServices;
 using neurozen.API.Appointments.Domain.Repositories;
 using neurozen.API.Appointments.Domain.Services;
 using neurozen.API.Appointments.Infrastructure.Repositories;
+using neurozen.API.Resources;
 using neurozen.API.Triggers.Application.Internal.CommandServices;
 using neurozen.API.Triggers.Domain.Repositories;
 using neurozen.API.Triggers.Domain.Services;
@@ -20,10 +21,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true );
-
-builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
-
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddControllers().AddDataAnnotationsLocalization(options =>
+{
+    options.DataAnnotationLocalizerProvider = (type, factory) =>
+    {
+        return factory.Create(typeof(SharedResource));
+    };
+});
+
+//Localization
+
+builder.Services.AddLocalization();
+var LocalizationOptions = new RequestLocalizationOptions();
+
+
+LocalizationOptions.SetDefaultCulture("es-PE");
+LocalizationOptions.AddSupportedCultures("es-PE", "en-US");
+LocalizationOptions.AddSupportedUICultures("es-PE", "en-US");
+LocalizationOptions.ApplyCurrentCultureToResponseHeaders = true;
+
 // Enable Swashbuckle Annotations so [SwaggerOperation]/[SwaggerResponse] attributes are recognized
 builder.Services.AddSwaggerGen(options => options.EnableAnnotations());
 
@@ -62,6 +80,7 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
 }
+app.UseRequestLocalization(LocalizationOptions);
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

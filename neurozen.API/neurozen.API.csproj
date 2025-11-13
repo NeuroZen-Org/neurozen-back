@@ -29,4 +29,17 @@
       <Folder Include="UserManagement\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\SharedResource.en-US.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SharedResource.en-US.Designer.cs</LastGenOutput>
+        <DependentUpon>SharedResource.cs</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\SharedResource.es-PE.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SharedResource.es-PE.Designer.cs</LastGenOutput>
+        <DependentUpon>SharedResource.cs</DependentUpon>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>
