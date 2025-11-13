@@ -29,7 +29,7 @@ public class AppointmentsController(
     {
         var createAppointmentCommand = CreateAppointmentCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result =  await appointmentCommandService.Handle(createAppointmentCommand);
-        if (result is null) return BadRequest();
+        if (result is null) return BadRequest(new { message = "Failed to create appointment. Please verify that the Patient ID and Professional ID exist in the database." });
         return CreatedAtAction(nameof(GetAppointmentById), new{id = result.Id}, AppointmentResourceFromEntityAssembler.ToResourceFromEntity(result));
     }
     

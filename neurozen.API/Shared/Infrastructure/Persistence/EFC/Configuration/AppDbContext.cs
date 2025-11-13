@@ -39,5 +39,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.ApplyConfiguration(new Sales.Infrastructure.Persistence.EFC.Configuration.AppSettingConfiguration());
         
         builder.ApplyConfiguration(new Payments.Infrastructure.Persistence.EFC.Configuration.PaymentConfiguration());
+
+        builder.ApplyConfiguration(
+            new Appointments.Infrastructure.Persistence.EFC.Configuration.AppointmentConfiguration());
     }
 }
