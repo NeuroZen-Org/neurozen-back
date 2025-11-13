@@ -5,6 +5,10 @@ using neurozen.API.Appointments.Application.Internal.QueryServices;
 using neurozen.API.Appointments.Domain.Repositories;
 using neurozen.API.Appointments.Domain.Services;
 using neurozen.API.Appointments.Infrastructure.Repositories;
+using neurozen.API.Triggers.Application.Internal.CommandServices;
+using neurozen.API.Triggers.Domain.Repositories;
+using neurozen.API.Triggers.Domain.Services;
+using neurozen.API.Triggers.Infraestructure.Respositories;
 using neurozen.API.Shared.Domain.Repositories;
 using neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
@@ -40,9 +44,14 @@ if (builder.Environment.IsDevelopment())
         });
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Appointments services
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IAppointmentCommandService, AppointmentCommandService>();
 builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
+
+// Triggers services
+builder.Services.AddScoped<ITriggerRepository, TriggerRepository>();
+builder.Services.AddScoped<ITriggerCommandService, TriggerCommandService>();
 
 var app = builder.Build();
 
