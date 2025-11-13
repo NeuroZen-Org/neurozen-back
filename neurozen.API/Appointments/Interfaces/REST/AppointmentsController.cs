@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using neurozen.API.Appointments.Domain.Model.Commands;
 using Swashbuckle.AspNetCore.Annotations;
 using neurozen.API.Appointments.Domain.Model.Queries;
@@ -7,6 +8,7 @@ using neurozen.API.Appointments.Domain.Services;
 using neurozen.API.Appointments.Interfaces.REST.Resources;
 using neurozen.API.Appointments.Interfaces.REST.Transform;
 using neurozen.API.Appointments.Domain.Model.ValueObjects;
+using neurozen.API.Resources;
 
 namespace neurozen.API.Appointments.Interfaces.REST;
 
@@ -17,7 +19,8 @@ namespace neurozen.API.Appointments.Interfaces.REST;
 [Tags("Appointments")]
 public class AppointmentsController(
     IAppointmentCommandService appointmentCommandService,
-    IAppointmentQueryService appointmentQueryService) : ControllerBase
+    IAppointmentQueryService appointmentQueryService,
+    IStringLocalizer<SharedResource> _localizer) : ControllerBase
 {
     [HttpPost]
     [SwaggerOperation(
@@ -28,9 +31,13 @@ public class AppointmentsController(
     [SwaggerResponse(400, "Appointment creation failed")]
     public async Task<ActionResult> CreateAppointment([FromBody] CreateAppointmentResource resource)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        String msg = _localizer.GetString("CreateAppointmentError");
         var createAppointmentCommand = CreateAppointmentCommandFromResourceAssembler.ToCommandFromResource(resource);
         var result =  await appointmentCommandService.Handle(createAppointmentCommand);
-        if (result is null) return BadRequest(new { message = "Failed to create appointment. Please verify that the Patient ID and Professional ID exist in the database." });
+        if (result is null) return BadRequest(new { message = msg });
         return CreatedAtAction(nameof(GetAppointmentById), new{id = result.Id}, AppointmentResourceFromEntityAssembler.ToResourceFromEntity(result));
     }
     
@@ -43,8 +50,10 @@ public class AppointmentsController(
     [SwaggerResponse(400, "Appointments retrieval failed")]
     public async Task<ActionResult<IEnumerable<AppointmentResource>>> GetAllAppointmentsByPatientIdAsync(int patientId)
     {
+        String msg = _localizer.GetString("GetAppointmentsbyPatientIdError");
         var getAllAppointmentsByPatientIdQuery = new GetAllAppointmentsQueryByPatientId(patientId);
         var result = await appointmentQueryService.Handle(getAllAppointmentsByPatientIdQuery);
+        if (result == null || !result.Any()) return BadRequest(new { message = msg });
         var appointments = result.Select(AppointmentResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(appointments);
     }
