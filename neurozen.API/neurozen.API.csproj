@@ -16,14 +16,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Appointments\Domain\Model\Entities\" />
-      <Folder Include="Intervention\" />
       <Folder Include="Payments\" />
       <Folder Include="ProfessionalConnection\" />
       <Folder Include="Stress\" />
       <Folder Include="Subscription\" />
       <Folder Include="Triggers\Application\Internal\QueryServices\" />
       <Folder Include="Triggers\Domain\Model\Queries\" />
+      <Folder Include="Professionals\Interfaces\REST\Resources\" />
+      <Folder Include="Professionals\Interfaces\REST\Transform\" />
       <Folder Include="UserManagement\" />
     </ItemGroup>
 

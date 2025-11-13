@@ -12,6 +12,10 @@ using neurozen.API.Triggers.Infraestructure.Respositories;
 using neurozen.API.Shared.Domain.Repositories;
 using neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+using neurozen.API.Professionals.Domain.Repositories;
+using neurozen.API.Professionals.Infrastructure.Repositories;
+using neurozen.API.Professionals.Domain.Services;
+using neurozen.API.Professionals.Application.Internal.QueryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddRouting(options => options.LowercaseUrls = true );
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
 
@@ -52,6 +56,10 @@ builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
 // Triggers services
 builder.Services.AddScoped<ITriggerRepository, TriggerRepository>();
 builder.Services.AddScoped<ITriggerCommandService, TriggerCommandService>();
+
+// Professionals services
+builder.Services.AddScoped<IProfessionalRepository, ProfessionalRepository>();
+builder.Services.AddScoped<IProfessionalQueryService, ProfessionalQueryService>();
 
 var app = builder.Build();
 
