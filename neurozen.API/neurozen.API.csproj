@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Appointments\Domain\Model\Entities\" />
       <Folder Include="Intervention\" />
       <Folder Include="Payments\" />
       <Folder Include="ProfessionalConnection\" />
