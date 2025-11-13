@@ -8,7 +8,7 @@ using neurozen.API.Appointments.Infrastructure.Repositories;
 using neurozen.API.Triggers.Application.Internal.CommandServices;
 using neurozen.API.Triggers.Domain.Repositories;
 using neurozen.API.Triggers.Domain.Services;
-using neurozen.API.Triggers.Infraestructure.Respositories;
+using neurozen.API.Triggers.Infrastructure.Repositories;
 using neurozen.API.Shared.Domain.Repositories;
 using neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
@@ -16,6 +16,7 @@ using neurozen.API.Professionals.Domain.Repositories;
 using neurozen.API.Professionals.Infrastructure.Repositories;
 using neurozen.API.Professionals.Domain.Services;
 using neurozen.API.Professionals.Application.Internal.QueryServices;
+using neurozen.API.Professionals.Application.Internal.CommandServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
@@ -49,6 +52,7 @@ if (builder.Environment.IsDevelopment())
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Appointments services
+// Appointments services
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IAppointmentCommandService, AppointmentCommandService>();
 builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
@@ -59,6 +63,7 @@ builder.Services.AddScoped<ITriggerCommandService, TriggerCommandService>();
 
 // Professionals services
 builder.Services.AddScoped<IProfessionalRepository, ProfessionalRepository>();
+builder.Services.AddScoped<IProfessionalCommandService, ProfessionalCommandService>();
 builder.Services.AddScoped<IProfessionalQueryService, ProfessionalQueryService>();
 
 var app = builder.Build();
