@@ -11,4 +11,9 @@ public class ProfessionalQueryService(IProfessionalRepository professionalReposi
     {
         return await professionalRepository.GetAllProfessionals();
     }
+
+    public async Task<Professional?> Handle(GetProfessionalByIdQuery query)
+    {
+        return await professionalRepository.FindByIdAsync(query.Id);
+    }
 }
