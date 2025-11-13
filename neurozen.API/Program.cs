@@ -14,6 +14,15 @@ using neurozen.API.Subscriptions.Application.Internal.CommandServices;
 using neurozen.API.Subscriptions.Domain.Repositories; 
 using neurozen.API.Subscriptions.Domain.Services;
 using neurozen.API.Subscriptions.Infraestructure.Respositories;
+using neurozen.API.Professionals.Application.Internal.CommandServices;
+using neurozen.API.Professionals.Application.Internal.QueryServices;
+using neurozen.API.Professionals.Domain.Repositories;
+using neurozen.API.Professionals.Domain.Services;
+using neurozen.API.Professionals.Infrastructure.Repositories;
+using neurozen.API.ResourcesLibrary.Application.Internal.CommandServices;
+using neurozen.API.ResourcesLibrary.Domain.Repositories;
+using neurozen.API.ResourcesLibrary.Domain.Services;
+using neurozen.API.ResourcesLibrary.Infrastructure.Repositories;
 using neurozen.API.Shared.Domain.Repositories;
 using neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
@@ -78,6 +87,15 @@ builder.Services.AddScoped<ITriggerCommandService, TriggerCommandService>();
 // Subscriptions services
 builder.Services.AddScoped<ISubscriptionRepository, SubcriptionRepository>();
 builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>();
+
+// Professionals services
+builder.Services.AddScoped<IProfessionalRepository, ProfessionalRepository>();
+builder.Services.AddScoped<IProfessionalCommandService, ProfessionalCommandService>();
+builder.Services.AddScoped<IProfessionalQueryService, ProfessionalQueryService>();
+
+// ResourcesLibrary services
+builder.Services.AddScoped<IResourceLibraryRepository, ResourceLibraryRepository>();
+builder.Services.AddScoped<IResourceLibraryCommandService, ResourceLibraryCommandService>();
 
 var app = builder.Build();
 
