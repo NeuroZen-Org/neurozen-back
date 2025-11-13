@@ -1,9 +1,11 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using neurozen.API.Professionals.Domain.Model.Queries;
 using neurozen.API.Professionals.Domain.Services;
 using neurozen.API.Professionals.Interfaces.REST.Resources;
 using neurozen.API.Professionals.Interfaces.REST.Transform;
+using neurozen.API.Resources;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace neurozen.API.Professionals.Interfaces.REST;
@@ -14,7 +16,8 @@ namespace neurozen.API.Professionals.Interfaces.REST;
 [Tags("Professionals")]
 public class ProfessionalsController(
   IProfessionalCommandService professionalCommandService,
-  IProfessionalQueryService professionalQueryService) : ControllerBase
+  IProfessionalQueryService professionalQueryService,
+  IStringLocalizer<SharedResource> _localizer) : ControllerBase
 {
   [HttpGet]
   [SwaggerOperation(
@@ -25,8 +28,10 @@ public class ProfessionalsController(
   [SwaggerResponse(500, "Internal server error")]
   public async Task<ActionResult<IEnumerable<ProfessionalResource>>> GetAllProfessionals()
   {
+    String msg = _localizer.GetString("GetAllProfessionalsError");
     var getAllProfessionalsQuery = new GetAllProfessionalsQuery();
     var result = await professionalQueryService.Handle(getAllProfessionalsQuery);
+    if (result == null || !result.Any()) return BadRequest(new { message = msg });
     var professionals = result.Select(ProfessionalResourceFromEntityAssembler.ToResourceFromEntity);
     return Ok(professionals);
   }
@@ -40,11 +45,12 @@ public class ProfessionalsController(
   [SwaggerResponse(400, "Professional creation failed")]
   public async Task<ActionResult> CreateProfessional([FromBody] CreateProfessionalResource resource)
   {
+    string msg = _localizer.GetString("CreateProfessionalError");
     var createProfessionalCommand = CreateProfessionalCommandFromResourceAssembler.ToCommandFromResource(resource);
 
     var result = await professionalCommandService.Handle(createProfessionalCommand);
 
-    if (result is null) return BadRequest(new { message = "Failed to create professional." });
+    if (result is null) return BadRequest(new { message = msg});
     return CreatedAtAction(nameof(GetProfessionalById), new { id = result.Id }, ProfessionalResourceFromEntityAssembler.ToResourceFromEntity(result));
   }
 
@@ -56,9 +62,10 @@ public class ProfessionalsController(
   [SwaggerResponse(404, "Professional not found")]
   public async Task<ActionResult> GetProfessionalById(int id)
   {
+    string msg = _localizer.GetString("GetProfessionalByIdError");
     var getAppointmentByIdQuery = new GetProfessionalByIdQuery(id);
     var result = await professionalQueryService.Handle(getAppointmentByIdQuery);
-    if (result is null) return NotFound();
+    if (result is null) return BadRequest(new { message = msg });
     return Ok(ProfessionalResourceFromEntityAssembler.ToResourceFromEntity(result));
   }
 }
