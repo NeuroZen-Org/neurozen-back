@@ -10,6 +10,8 @@ public class AppointmentResourceFromEntityAssembler
             entity.Id,
             entity.PatientId,
             entity.ProfessionalId,
-            entity.AppointmentDateTime
+            entity.AppointmentDateTime,
+            entity.AppointmentType,
+            entity.Notas_Adicionales
         );
 }

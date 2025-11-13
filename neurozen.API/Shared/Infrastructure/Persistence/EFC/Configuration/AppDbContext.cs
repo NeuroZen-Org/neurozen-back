@@ -8,7 +8,7 @@ namespace neurozen.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 /// </summary>
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
         base.OnConfiguring(builder);
@@ -26,22 +26,24 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.ApplyConfiguration(new Catalog.Infrastructure.Persistence.EFC.Configuration.CategoryConfiguration());
         builder.ApplyConfiguration(new Catalog.Infrastructure.Persistence.EFC.Configuration.ProductConfiguration());
         builder.ApplyConfiguration(new Catalog.Infrastructure.Persistence.EFC.Configuration.ProductImageConfiguration());
-        
+
         builder.ApplyConfiguration(new UserManagement.Infrastructure.Persistence.EFC.Configuration.UserConfiguration());
         builder.ApplyConfiguration(new UserManagement.Infrastructure.Persistence.EFC.Configuration.SessionConfiguration());
         builder.ApplyConfiguration(new UserManagement.Infrastructure.Persistence.EFC.Configuration.AddressConfiguration());
         builder.ApplyConfiguration(new UserManagement.Infrastructure.Persistence.EFC.Configuration.NotificationConfiguration());
-        
+
         builder.ApplyConfiguration(new Sales.Infrastructure.Persistence.EFC.Configuration.CartConfiguration());
         builder.ApplyConfiguration(new Sales.Infrastructure.Persistence.EFC.Configuration.CartItemConfiguration());
         builder.ApplyConfiguration(new Sales.Infrastructure.Persistence.EFC.Configuration.OrderConfiguration());
         builder.ApplyConfiguration(new Sales.Infrastructure.Persistence.EFC.Configuration.OrderItemConfiguration());
         builder.ApplyConfiguration(new Sales.Infrastructure.Persistence.EFC.Configuration.AppSettingConfiguration());
-        
+
         builder.ApplyConfiguration(new Payments.Infrastructure.Persistence.EFC.Configuration.PaymentConfiguration());
 
         builder.ApplyConfiguration(
             new Appointments.Infrastructure.Persistence.EFC.Configuration.AppointmentConfiguration());
+
+        builder.ApplyConfiguration(new Professionals.Infrastructure.Persistence.EFC.Configuration.ProfessionalConfiguration());
         
         builder.ApplyConfiguration(
             new Triggers.Infraestructure.Persistence.EFC.Configuration.TriggerConfiguration());

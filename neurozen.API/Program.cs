@@ -12,10 +12,6 @@ using neurozen.API.Triggers.Infraestructure.Respositories;
 using neurozen.API.Shared.Domain.Repositories;
 using neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
-using neurozen.API.ResourcesLibrary.Application.Internal.CommandServices;
-using neurozen.API.ResourcesLibrary.Domain.Repositories;
-using neurozen.API.ResourcesLibrary.Domain.Services;
-using neurozen.API.ResourcesLibrary.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,10 +52,6 @@ builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
 // Triggers services
 builder.Services.AddScoped<ITriggerRepository, TriggerRepository>();
 builder.Services.AddScoped<ITriggerCommandService, TriggerCommandService>();
-
-// ResourceLibrary Services
-builder.Services.AddScoped<IResourceLibraryCommandService, ResourceLibraryCommandService>();
-builder.Services.AddScoped<IResourceLibraryRepository, ResourceLibraryRepository>();
 
 var app = builder.Build();
 
