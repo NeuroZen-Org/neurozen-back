@@ -11,18 +11,21 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Intervention\" />
       <Folder Include="Payments\" />
       <Folder Include="ProfessionalConnection\" />
       <Folder Include="Stress\" />
       <Folder Include="Subscription\" />
       <Folder Include="Triggers\Application\Internal\QueryServices\" />
       <Folder Include="Triggers\Domain\Model\Queries\" />
+      <Folder Include="Professionals\Interfaces\REST\Resources\" />
+      <Folder Include="Professionals\Interfaces\REST\Transform\" />
+      <Folder Include="Professionals\Interfaces\REST\Resources\" />
+      <Folder Include="Professionals\Interfaces\REST\Transform\" />
       <Folder Include="UserManagement\" />
     </ItemGroup>
 
