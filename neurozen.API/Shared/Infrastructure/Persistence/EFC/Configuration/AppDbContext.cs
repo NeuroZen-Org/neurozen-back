@@ -42,5 +42,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
         builder.ApplyConfiguration(
             new Appointments.Infrastructure.Persistence.EFC.Configuration.AppointmentConfiguration());
+        
+        builder.ApplyConfiguration(
+            new Triggers.Infraestructure.Persistence.EFC.Configuration.TriggerConfiguration());
     }
 }
