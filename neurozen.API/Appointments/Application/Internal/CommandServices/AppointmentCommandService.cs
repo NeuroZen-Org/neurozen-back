@@ -13,8 +13,7 @@ namespace neurozen.API.Appointments.Application.Internal.CommandServices;
 public class AppointmentCommandService(
     IAppointmentRepository appointmentRepository, 
     IUnitOfWork unitOfWork,
-    ILogger<AppointmentCommandService> logger//,
-    /*IStringLocalizer<SharedResource> _localizer*/) : IAppointmentCommandService
+    ILogger<AppointmentCommandService> logger) : IAppointmentCommandService
 {
     public async Task<Appointment?> Handle(CreateAppointmentCommand command)
     {
@@ -26,7 +25,6 @@ public class AppointmentCommandService(
         }
         catch (Exception e)
         {
-           //String msg = _localizer.GetString("ErrorCreatingAppointment");
             logger.LogError(e, "Error creating appointment. PatientId: {PatientId}, ProfessionalId: {ProfessionalId}, AppointmentDate: {AppointmentDate}", 
                 command.PatientId, command.ProfessionalId, command.AppointmentDate);
             return null;
