@@ -43,7 +43,7 @@ public class UserCommandService(
 
     /**
      * <summary>
-     *     Handle sign up command
+     *     Handle sign up commands
      * </summary>
      * <param name="command">The sign up command</param>
      * <returns>A confirmation message on successful creation.</returns>
