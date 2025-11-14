@@ -1,4 +1,5 @@
 using neurozen.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using neurozen.API.IAM.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace neurozen.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -50,6 +51,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
         builder.ApplyConfiguration(
             new ResourcesLibrary.Infrastructure.Persistence.EFC.Configuration.ResourceLibraryConfiguration());
+
+        // Apply IAM bounded context configuration
+        builder.ApplyIamConfiguration();
  		
   }
 }
