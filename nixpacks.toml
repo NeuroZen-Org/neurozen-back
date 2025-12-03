@@ -1,9 +1,9 @@
 [phases.setup]
-cmd = "cd out && dotnet neurozen.API.dll"
-[start]
+nixPkgs = ["dotnet-sdk_8"]
 
-cmds = ["dotnet publish neurozen.API/neurozen.API.csproj -c Release -o out"]
 [phases.build]
+cmds = ["dotnet publish neurozen.API/neurozen.API.csproj -c Release -o out"]
 
-nixPkgs = ["dotnet-sdk_9"]
+[start]
+cmd = "cd out && dotnet neurozen.API.dll"
 
