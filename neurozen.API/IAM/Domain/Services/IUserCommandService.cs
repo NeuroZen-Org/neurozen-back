@@ -30,4 +30,13 @@ public interface IUserCommandService
         * <returns>A confirmation message on successful creation.</returns>
         */
     Task Handle(SignUpCommand command);
+
+    /**
+        * <summary>
+        *     Handle update user profile command
+        * </summary>
+        * <param name="command">The update user profile command</param>
+        * <returns>The updated user</returns>
+        */
+    Task<User?> Handle(UpdateUserProfileCommand command);
 }

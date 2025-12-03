@@ -1,4 +1,4 @@
-﻿using neurozen.API.Shared.Domain.Repositories;
+﻿﻿using neurozen.API.Shared.Domain.Repositories;
 using neurozen.API.Subscriptions.Domain.Model.Aggregates;
 
 namespace neurozen.API.Subscriptions.Domain.Repositories;
@@ -16,4 +16,7 @@ public interface ISubscriptionRepository : IBaseRepository<Subscription>
 
     // Obtener todas las suscripciones de un usuario específico
     Task<IEnumerable<Subscription>> FindByUserIdAsync(int userId); // 👈 nuevo
+    
+    // Verificar si un usuario tiene una suscripción activa
+    Task<Subscription?> FindActiveSubscriptionByUserIdAsync(int userId);
 }
