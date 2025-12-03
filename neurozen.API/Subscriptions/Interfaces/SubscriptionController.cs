@@ -1,4 +1,5 @@
 ﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using neurozen.API.Resources;
@@ -20,6 +21,7 @@ public class SubscriptionsController(
     IStringLocalizer<SharedResource> _localizer) : ControllerBase
 {
     [HttpPost]
+    [AllowAnonymous]
     [SwaggerOperation(
         Summary = "Creates a subscription",
         Description = "Creates a subscription with given parameters")]

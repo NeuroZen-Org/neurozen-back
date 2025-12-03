@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using neurozen.API.Subscriptions.Domain.Model.Aggregates;
 
@@ -18,6 +18,10 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
             .ValueGeneratedOnAdd();
         
         // Properties
+        builder.Property(t => t.UserId)
+            .IsRequired()
+            .HasColumnName("UserId");
+        
         builder.Property(t => t.PlanId)
             .IsRequired()
             .HasColumnName("PlanId");
@@ -52,6 +56,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
             .HasDefaultValue(true); // puedes poner false o null según tu lógica
         
         // Indexes for better performance
+        builder.HasIndex(t => t.UserId).HasDatabaseName("IX_Subscription_UserId");
         builder.HasIndex(t => t.PlanId).HasDatabaseName("IX_Subscription_PlanId");
         builder.HasIndex(t => t.EmailUser).HasDatabaseName("IX_Subscription_EmailUser");
         builder.HasIndex(t => t.NumberCard).HasDatabaseName("IX_Subscription_NumberCard");
