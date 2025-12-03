@@ -14,7 +14,7 @@ public partial class Subscription
         NumberCard = string.Empty;
         ExpirationDate = string.Empty;
         Cvv = string.Empty;
-        IsActive = null; // opcional, sin valor inicial
+        IsActive = false; // 👈 Valor por defecto false
     }
 
     public Subscription(CreateSubscriptionCommand command)
@@ -41,4 +41,20 @@ public partial class Subscription
     public string Cvv { get; private set; }
     
     public bool? IsActive { get; set; }
+    
+    /// <summary>
+    /// Activa la suscripción después de ser guardada exitosamente
+    /// </summary>
+    public void Activate()
+    {
+        IsActive = true;
+    }
+    
+    /// <summary>
+    /// Desactiva la suscripción
+    /// </summary>
+    public void Deactivate()
+    {
+        IsActive = false;
+    }
 }
