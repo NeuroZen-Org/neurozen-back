@@ -39,4 +39,11 @@ public class SubcriptionRepository(AppDbContext context)
             .Where(s => s.UserId == userId)
             .ToListAsync();
     }
+    
+    // Verificar si un usuario tiene una suscripción activa
+    public async Task<Subscription?> FindActiveSubscriptionByUserIdAsync(int userId)
+    {
+        return await context.Set<Subscription>()
+            .FirstOrDefaultAsync(s => s.UserId == userId && s.IsActive == true);
+    }
 }
