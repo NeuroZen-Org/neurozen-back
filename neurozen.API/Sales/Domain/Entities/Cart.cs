@@ -6,8 +6,8 @@ namespace neurozen.API.Sales.Domain.Entities
     public class Cart
     {
         public Guid Id { get; set; }
-        public Guid? UserId { get; set; }
-        public neurozen.API.UserManagement.Domain.Entities.User? User { get; set; }
+        public int? UserId { get; set; }
+        public neurozen.API.IAM.Domain.Model.Aggregates.User? User { get; set; }
         public string? SessionId { get; set; }
         public string Metadata { get; set; } = "{}";
         public DateTimeOffset CreatedAt { get; set; }

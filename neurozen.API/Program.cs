@@ -24,7 +24,7 @@ using neurozen.API.Triggers.Domain.Repositories;
 using neurozen.API.Triggers.Domain.Services;
 using neurozen.API.Triggers.Infraestructure.Respositories;
 using neurozen.API.Subscriptions.Application.Internal.CommandServices;
-using neurozen.API.Subscriptions.Domain.Repositories; 
+using neurozen.API.Subscriptions.Domain.Repositories;
 using neurozen.API.Subscriptions.Domain.Services;
 using neurozen.API.Subscriptions.Infraestructure.Respositories;
 using neurozen.API.Professionals.Application.Internal.CommandServices;
@@ -52,7 +52,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddRouting(options => options.LowercaseUrls = true );
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 // Configure CORS para permitir peticiones desde el frontend
 builder.Services.AddCors(options =>
 {
@@ -102,10 +102,10 @@ LocalizationOptions.ApplyCurrentCultureToResponseHeaders = true;
 builder.Services.AddSwaggerGen(options =>
 {
     options.EnableAnnotations();
-    
+
     // Configurar para que use los valores por defecto de las propiedades
     options.SchemaFilter<neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration.DefaultValueSchemaFilter>();
-    
+
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -203,160 +203,57 @@ builder.Services.AddScoped<IResourceLibraryCommandService, ResourceLibraryComman
 
 var app = builder.Build();
 
-// Verify Database Objects are created and apply schema changes
+// Apply EF Core migrations on startup
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
     var logger = services.GetRequiredService<ILogger<Program>>();
-    
-    Console.WriteLine("========================================");
-    Console.WriteLine("INICIANDO ACTUALIZACIÓN DE BASE DE DATOS");
-    Console.WriteLine("========================================");
-    
+
     try
     {
+        Console.WriteLine("========================================");
+        Console.WriteLine("INICIALIZANDO BASE DE DATOS");
+        Console.WriteLine("========================================");
+
+        // Apply pending migrations (creates DB if it doesn't exist in Development)
         var pendingMigrations = context.Database.GetPendingMigrations().ToList();
-        
         if (pendingMigrations.Any())
         {
             Console.WriteLine($"⚠ Aplicando {pendingMigrations.Count} migraciones pendientes...");
-            logger.LogInformation("Applying {Count} pending migrations...", pendingMigrations.Count);
+            logger.LogInformation("Applying {Count} pending migrations: {Migrations}",
+                pendingMigrations.Count, string.Join(", ", pendingMigrations));
+
             context.Database.Migrate();
-            logger.LogInformation("Database migrations applied successfully.");
+
             Console.WriteLine("✓ Migraciones aplicadas exitosamente.");
+            logger.LogInformation("✓ Database migrations applied successfully.");
         }
         else
         {
-            Console.WriteLine("ℹ No hay migraciones pendientes.");
-            
-            // Si no hay migraciones pendientes, asegurar que la BD existe
-            var canConnect = context.Database.CanConnect();
-            if (!canConnect)
-            {
-                Console.WriteLine("⚠ Base de datos no existe. Creando...");
-                logger.LogInformation("Database does not exist. Creating...");
-                context.Database.EnsureCreated();
-                logger.LogInformation("Database created successfully.");
-                Console.WriteLine("✓ Base de datos creada exitosamente.");
-            }
-            else
-            {
-                Console.WriteLine("✓ Conexión a base de datos verificada.");
-                logger.LogInformation("Database connection verified.");
-                
-                // Ejecutar SQL para agregar columnas faltantes de forma segura
-                try
-                {
-                    Console.WriteLine("ℹ Verificando esquema de la tabla user...");
-                    logger.LogInformation("Checking user table schema...");
-                    
-                    // Verificar y agregar columnas una por una con manejo de errores individual
-                    var columnsToAdd = new List<(string name, string definition, bool needsUpdate)>
-                    {
-                        ("email", "VARCHAR(255) NULL", false),
-                        ("full_name", "VARCHAR(255) NULL", false),
-                        ("phone_number", "VARCHAR(50) NULL", false),
-                        ("address", "VARCHAR(500) NULL", false),
-                        ("avatar_url", "VARCHAR(500) NULL", false),
-                        ("date_of_birth", "DATETIME(6) NULL", false),
-                        ("created_at", "DATETIME(6) NULL", true),
-                        ("updated_at", "DATETIME(6) NULL", true)
-                    };
-
-                    var addedColumns = 0;
-                    var existingColumns = 0;
-                    
-                    foreach (var (name, definition, needsUpdate) in columnsToAdd)
-                    {
-                        try
-                        {
-                            var sql = $"ALTER TABLE `user` ADD COLUMN `{name}` {definition}";
-                            context.Database.ExecuteSqlRaw(sql);
-                            Console.WriteLine($"  ✓ Columna '{name}' agregada a la tabla user.");
-                            logger.LogInformation("✓ Added column '{ColumnName}' to user table.", name);
-                            addedColumns++;
-                            
-                            // Si es una columna de timestamp y se acaba de agregar, actualizar registros existentes
-                            if (needsUpdate)
-                            {
-                                try
-                                {
-                                    var updateSql = $"UPDATE `user` SET `{name}` = CURRENT_TIMESTAMP(6) WHERE `{name}` IS NULL";
-                                    context.Database.ExecuteSqlRaw(updateSql);
-                                    Console.WriteLine($"  ✓ Registros existentes actualizados para '{name}'.");
-                                    logger.LogInformation("✓ Updated existing records with default value for '{ColumnName}'.", name);
-                                }
-                                catch (Exception updateEx)
-                                {
-                                    Console.WriteLine($"  ⚠ No se pudieron actualizar registros para '{name}': {updateEx.Message}");
-                                    logger.LogWarning("Could not update existing records for '{ColumnName}': {Error}", name, updateEx.Message);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            // Columna ya existe, ignorar el error
-                            if (ex.Message.Contains("Duplicate column name") || ex.Message.Contains("already exists"))
-                            {
-                                existingColumns++;
-                                Console.WriteLine($"  - Columna '{name}' ya existe.");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"  ✗ Error al agregar columna '{name}': {ex.Message}");
-                                logger.LogWarning("Failed to add column '{ColumnName}': {Error}", name, ex.Message);
-                            }
-                        }
-                    }
-                    
-                    Console.WriteLine("");
-                    if (addedColumns > 0)
-                    {
-                        Console.WriteLine($"✓✓✓ ACTUALIZACIÓN COMPLETADA: {addedColumns} columnas nuevas agregadas.");
-                        logger.LogInformation("✓ User profile schema update completed. Added {Count} new columns.", addedColumns);
-                    }
-                    else if (existingColumns > 0)
-                    {
-                        Console.WriteLine($"✓ Esquema actualizado ({existingColumns} columnas ya existían).");
-                        logger.LogInformation("✓ User table schema is up to date ({Count} columns already exist).", existingColumns);
-                    }
-                    else
-                    {
-                        Console.WriteLine("⚠⚠⚠ ADVERTENCIA: No se agregaron columnas. Puede haber un problema.");
-                        logger.LogWarning("⚠ No columns were added. This might indicate a problem.");
-                    }
-                }
-                catch (Exception sqlEx)
-                {
-                    Console.WriteLine($"✗✗✗ ERROR durante actualización de esquema: {sqlEx.Message}");
-                    Console.WriteLine($"Stack trace: {sqlEx.StackTrace}");
-                    logger.LogError(sqlEx, "❌ Error during schema update: {Message}", sqlEx.Message);
-                    logger.LogWarning("⚠ The application may not work correctly until the database schema is updated manually.");
-                }
-            }
+            Console.WriteLine("✓ Base de datos está actualizada (sin migraciones pendientes).");
+            logger.LogInformation("✓ Database is up to date.");
         }
+
+        Console.WriteLine("========================================");
+        Console.WriteLine("INICIALIZACIÓN COMPLETADA EXITOSAMENTE");
+        Console.WriteLine("========================================");
+        Console.WriteLine("");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"✗✗✗ ERROR CRÍTICO durante inicialización de base de datos:");
+        Console.WriteLine("========================================");
+        Console.WriteLine("✗✗✗ ERROR CRÍTICO EN INICIALIZACIÓN");
+        Console.WriteLine("========================================");
         Console.WriteLine($"Mensaje: {ex.Message}");
-        Console.WriteLine($"Stack trace: {ex.StackTrace}");
-        logger.LogError(ex, "Error during database initialization: {Message}", ex.Message);
+        logger.LogError(ex, "❌ Error during database initialization: {Message}", ex.Message);
         throw;
     }
-    
-    Console.WriteLine("========================================");
-    Console.WriteLine("INICIALIZACIÓN DE BASE DE DATOS COMPLETADA");
-    Console.WriteLine("========================================");
-    Console.WriteLine("");
 }
 app.UseRequestLocalization(LocalizationOptions);
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
-// Authentication middleware must run before authorization
 app.UseAuthentication();
-// Custom request authorization middleware (validates JWT and sets HttpContext.Items["User"])
 app.UseRequestAuthorization();
 app.UseAuthorization();
 app.MapControllers();

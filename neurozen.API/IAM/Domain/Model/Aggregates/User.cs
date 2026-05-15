@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.Collections.Generic;
 
 namespace neurozen.API.IAM.Domain.Model.Aggregates;
 
@@ -81,4 +82,11 @@ public class User(string username, string passwordHash)
         UpdatedAt = DateTime.UtcNow;
         return this;
     }
+
+    // Navigation properties
+    public ICollection<neurozen.API.Sales.Domain.Entities.Cart> Carts { get; set; } = new List<neurozen.API.Sales.Domain.Entities.Cart>();
+    public ICollection<neurozen.API.Sales.Domain.Entities.Order> Orders { get; set; } = new List<neurozen.API.Sales.Domain.Entities.Order>();
+    public ICollection<neurozen.API.UserManagement.Domain.Entities.Address> Addresses { get; set; } = new List<neurozen.API.UserManagement.Domain.Entities.Address>();
+    public ICollection<neurozen.API.UserManagement.Domain.Entities.Session> Sessions { get; set; } = new List<neurozen.API.UserManagement.Domain.Entities.Session>();
+    public ICollection<neurozen.API.UserManagement.Domain.Entities.Notification> Notifications { get; set; } = new List<neurozen.API.UserManagement.Domain.Entities.Notification>();
 }
