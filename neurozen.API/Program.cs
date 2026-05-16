@@ -24,18 +24,9 @@ using neurozen.API.Triggers.Domain.Repositories;
 using neurozen.API.Triggers.Domain.Services;
 using neurozen.API.Triggers.Infraestructure.Respositories;
 using neurozen.API.Subscriptions.Application.Internal.CommandServices;
-using neurozen.API.Subscriptions.Domain.Repositories;
+using neurozen.API.Subscriptions.Domain.Repositories; 
 using neurozen.API.Subscriptions.Domain.Services;
 using neurozen.API.Subscriptions.Infraestructure.Respositories;
-using neurozen.API.Professionals.Application.Internal.CommandServices;
-using neurozen.API.Professionals.Application.Internal.QueryServices;
-using neurozen.API.Professionals.Domain.Repositories;
-using neurozen.API.Professionals.Domain.Services;
-using neurozen.API.Professionals.Infrastructure.Repositories;
-using neurozen.API.ResourcesLibrary.Application.Internal.CommandServices;
-using neurozen.API.ResourcesLibrary.Domain.Repositories;
-using neurozen.API.ResourcesLibrary.Domain.Services;
-using neurozen.API.ResourcesLibrary.Infrastructure.Repositories;
 using neurozen.API.Shared.Domain.Repositories;
 using neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using neurozen.API.Shared.Infrastructure.Persistence.EFC.Repositories;
@@ -52,24 +43,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddRouting(options => options.LowercaseUrls = true);
-// Configure CORS para permitir peticiones desde el frontend
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins(
-                "http://localhost:5173",  // Vite dev server
-                "https://localhost:5173",
-                "http://localhost:4173",  // Vite preview
-                "https://neurozen-frontend.web.app",  // Producción Firebase
-                "https://neurozen-frontend.firebaseapp.com"
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
-});
+builder.Services.AddRouting(options => options.LowercaseUrls = true );
 builder.Services.AddEndpointsApiExplorer();
 
 // Add controllers and apply a global authorization filter so every endpoint requires
@@ -102,10 +76,6 @@ LocalizationOptions.ApplyCurrentCultureToResponseHeaders = true;
 builder.Services.AddSwaggerGen(options =>
 {
     options.EnableAnnotations();
-
-    // Configurar para que use los valores por defecto de las propiedades
-    options.SchemaFilter<neurozen.API.Shared.Infrastructure.Interfaces.ASP.Configuration.DefaultValueSchemaFilter>();
-
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -192,68 +162,20 @@ builder.Services.AddScoped<ITriggerCommandService, TriggerCommandService>();
 builder.Services.AddScoped<ISubscriptionRepository, SubcriptionRepository>();
 builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>();
 
-// Professionals services
-builder.Services.AddScoped<IProfessionalRepository, ProfessionalRepository>();
-builder.Services.AddScoped<IProfessionalCommandService, ProfessionalCommandService>();
-builder.Services.AddScoped<IProfessionalQueryService, ProfessionalQueryService>();
-
-// ResourcesLibrary services
-builder.Services.AddScoped<IResourceLibraryRepository, ResourceLibraryRepository>();
-builder.Services.AddScoped<IResourceLibraryCommandService, ResourceLibraryCommandService>();
-
 var app = builder.Build();
 
-// Apply EF Core migrations on startup
+// Verify Database Objects are created
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
-    var logger = services.GetRequiredService<ILogger<Program>>();
-
-    try
-    {
-        Console.WriteLine("========================================");
-        Console.WriteLine("INICIALIZANDO BASE DE DATOS");
-        Console.WriteLine("========================================");
-
-        // Apply pending migrations (creates DB if it doesn't exist in Development)
-        var pendingMigrations = context.Database.GetPendingMigrations().ToList();
-        if (pendingMigrations.Any())
-        {
-            Console.WriteLine($"⚠ Aplicando {pendingMigrations.Count} migraciones pendientes...");
-            logger.LogInformation("Applying {Count} pending migrations: {Migrations}",
-                pendingMigrations.Count, string.Join(", ", pendingMigrations));
-
-            context.Database.Migrate();
-
-            Console.WriteLine("✓ Migraciones aplicadas exitosamente.");
-            logger.LogInformation("✓ Database migrations applied successfully.");
-        }
-        else
-        {
-            Console.WriteLine("✓ Base de datos está actualizada (sin migraciones pendientes).");
-            logger.LogInformation("✓ Database is up to date.");
-        }
-
-        Console.WriteLine("========================================");
-        Console.WriteLine("INICIALIZACIÓN COMPLETADA EXITOSAMENTE");
-        Console.WriteLine("========================================");
-        Console.WriteLine("");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("========================================");
-        Console.WriteLine("✗✗✗ ERROR CRÍTICO EN INICIALIZACIÓN");
-        Console.WriteLine("========================================");
-        Console.WriteLine($"Mensaje: {ex.Message}");
-        logger.LogError(ex, "❌ Error during database initialization: {Message}", ex.Message);
-        throw;
-    }
+    context.Database.EnsureCreated();
 }
 app.UseRequestLocalization(LocalizationOptions);
-app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
+// Authentication middleware must run before authorization
 app.UseAuthentication();
+// Custom request authorization middleware (validates JWT and sets HttpContext.Items["User"])
 app.UseRequestAuthorization();
 app.UseAuthorization();
 app.MapControllers();

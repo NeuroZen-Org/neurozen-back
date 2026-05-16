@@ -28,8 +28,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.ApplyConfiguration(new Catalog.Infrastructure.Persistence.EFC.Configuration.ProductConfiguration());
         builder.ApplyConfiguration(new Catalog.Infrastructure.Persistence.EFC.Configuration.ProductImageConfiguration());
 
-        // UserManagement configurations (Session, Address, Notification)
-        // NOTE: User configuration is handled by IAM context to avoid conflicts
+        builder.ApplyConfiguration(new UserManagement.Infrastructure.Persistence.EFC.Configuration.UserConfiguration());
         builder.ApplyConfiguration(new UserManagement.Infrastructure.Persistence.EFC.Configuration.SessionConfiguration());
         builder.ApplyConfiguration(new UserManagement.Infrastructure.Persistence.EFC.Configuration.AddressConfiguration());
         builder.ApplyConfiguration(new UserManagement.Infrastructure.Persistence.EFC.Configuration.NotificationConfiguration());
@@ -52,9 +51,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
         builder.ApplyConfiguration(
             new ResourcesLibrary.Infrastructure.Persistence.EFC.Configuration.ResourceLibraryConfiguration());
-
-        builder.ApplyConfiguration(
-            new Subscriptions.Infraestructure.Persistence.EFC.Configuration.SubscriptionConfiguration());
 
         // Apply IAM bounded context configuration
         builder.ApplyIamConfiguration();

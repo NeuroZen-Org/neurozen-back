@@ -22,7 +22,7 @@ namespace neurozen.API.IAM.Interfaces.REST;
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [SwaggerTag("Available User endpoints")]
-public class UsersController(IUserQueryService userQueryService, IUserCommandService userCommandService) : ControllerBase
+public class UsersController(IUserQueryService userQueryService) : ControllerBase
 {
     /**
      * <summary>
@@ -41,11 +41,7 @@ public class UsersController(IUserQueryService userQueryService, IUserCommandSer
     {
         var getUserByIdQuery = new GetUserByIdQuery(id);
         var user = await userQueryService.Handle(getUserByIdQuery);
-        
-        if (user == null)
-            return NotFound(new { message = "User not found" });
-        
-        var userResource = UserResourceFromEntityAssembler.ToResourceFromEntity(user);
+        var userResource = UserResourceFromEntityAssembler.ToResourceFromEntity(user!);
         return Ok(userResource);
     }
 
@@ -67,32 +63,5 @@ public class UsersController(IUserQueryService userQueryService, IUserCommandSer
         var users = await userQueryService.Handle(getAllUsersQuery);
         var userResources = users.Select(UserResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(userResources);
-    }
-
-    /**
-     * <summary>
-     *     Update user profile endpoint. It allows updating user profile information
-     * </summary>
-     * <param name="id">The user id</param>
-     * <param name="resource">The update user profile resource</param>
-     * <returns>The updated user resource</returns>
-     */
-    [HttpPut("{id}")]
-    [SwaggerOperation(
-        Summary = "Update user profile",
-        Description = "Update user profile information",
-        OperationId = "UpdateUserProfile")]
-    [SwaggerResponse(StatusCodes.Status200OK, "The user profile was updated", typeof(UserResource))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, "The user was not found")]
-    public async Task<IActionResult> UpdateUserProfile(int id, [FromBody] UpdateUserProfileResource resource)
-    {
-        var updateCommand = UpdateUserProfileCommandFromResourceAssembler.ToCommandFromResource(id, resource);
-        var updatedUser = await userCommandService.Handle(updateCommand);
-        
-        if (updatedUser == null)
-            return NotFound(new { message = "User not found" });
-        
-        var userResource = UserResourceFromEntityAssembler.ToResourceFromEntity(updatedUser);
-        return Ok(userResource);
     }
 }
